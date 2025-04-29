@@ -1,91 +1,128 @@
-import numpy as np
-import matplotlib.pyplot as plt
+# result = [x for x in range(5) if x % 2 == 0]
+# print(result)
 
-class PlateEquation:
-    def __init__(self, size, top_temp, left_temp, bottom_temp, right_temp):
-        self.n = size
-        self.A = np.zeros((size * size, size * size))
-        self.b = np.zeros(size * size)
-        self.top = top_temp
-        self.left = left_temp
-        self.bottom = bottom_temp
-        self.right = right_temp
+# 2
+# data = {"name": "Alice", "age": 30, "skills": ["Python", "SQL"], "location": "NYC"}
+# data["age"] = 31
+# data["skills"].append("Git")
+# data["email"] = "student@pjwstk.edu.pl"
+# print(data)
 
-    def build(self):
-        idx = 0
-        for i in range(self.n):
-            for j in range(self.n):
-                # Top
-                if i == self.n - 1:
-                    self.b[idx] += self.top
-                else:
-                    self.A[idx, (i + 1) * self.n + j] = 1
-                # Bottom
-                if i == 0:
-                    self.b[idx] += self.bottom
-                else:
-                    self.A[idx, (i - 1) * self.n + j] = 1
-                # Left
-                if j == self.n - 1:
-                    self.b[idx] += self.left
-                else:
-                    self.A[idx, i * self.n + j + 1] = 1
-                # Right
-                if j == 0:
-                    self.b[idx] += self.right
-                else:
-                    self.A[idx, i * self.n + j - 1] = 1
+# 3
+# x = [1, 2, 3]
+# y = x.copy()
+# y.append(4)
+# print(x)
 
-                self.A[idx, idx] = -4
-                idx += 1
+# 4
+# numbers = [10, 20, 30, 40, 50]
+# process = lambda nums: [n + 5 for n in nums[1:4]]
+# result = process(numbers)
+# print(numbers)
+# print(result)
 
-    def get_matrix(self):
-        return self.A
+# 5
+# data = [5, 3, 6, 2]
+# transform = lambda x: [(i, i**2) for i in sorted(x)]
+# result = transform(data)
+# print(result)
 
-    def get_vector(self):
-        return self.b
+# 6
+# def func(x):
+#     return x if x <= 1 else x * func(x-1)
+#
+#
+# print(func(5))
 
 
-def gauss_solve(A, b):
-    n = len(A)
-    for i in range(n):
-        max_row = i + np.argmax(np.abs(A[i:, i]))
-        A[[i, max_row]] = A[[max_row, i]]
-        b[i], b[max_row] = b[max_row], b[i]
+# Open-ended
+# 7
+# def log_execution(func):
+#     def wrapper(*args, **kwargs):
+#         print(f"[INFO] Starting function: '{func.__name__}'")
+#         result = func(*args, **kwargs)
+#         print(f"[INFO] Finishing function: '{func.__name__}'")
+#         return result
+#     return wrapper
+#
+# @log_execution
+# def greet():
+#     print("Python_Test!")
+#
+# greet()
 
-        for j in range(i + 1, n):
-            factor = A[j, i] / A[i, i]
-            A[j, i:] -= factor * A[i, i:]
-            b[j] -= factor * b[i]
+# 8
+# int_list = [1, 2, 3]
+# str_list = ['one', 'two', 'three']
+#
+# result = {}
+# index = 0
+# while index < len(int_list):
+#     result[int_list[index]] = str_list[index]
+#     index += 1
+#
+# print(result)
 
-    x = np.zeros(n)
-    for i in range(n - 1, -1, -1):
-        x[i] = (b[i] - np.dot(A[i, i + 1:], x[i + 1:])) / A[i, i]
+# 9
+# def is_valid_triangle(a,b,c):
+#     return a + b > c and a + c > b and a + c > b
+#
+#
+# print(is_valid_triangle(3, 4, 5))  # True
+# print(is_valid_triangle(1, 2, 3))
 
-    return x
+
+# 10
+# def age_group(age):
+#     if age < 18:
+#         return "Minor"
+#     elif age > 18 and age <= 64:
+#         return "Adult"
+#     else:
+#         return "Senior"
+#
+#
+# print(age_group(64))
+
+# a = [1, 2, 3]
+# b = a
+# a.append(4)
+# print(b)
+
+# def debug_log(func):
+#     def wrapper(*args, **kwargs):
+#         print(f"[DEBUG] Calling function: {func.__name__}")
+#         print(f"[DEBUG] Arguments: args={args}, kwargs={kwargs}")
+#         result = func(*args, **kwargs)
+#         print(f"[DEBUG] Result: {result}")
+#         return result
+#     return wrapper
+#
+#
+# @debug_log
+# def multiply(a, b):
+#     return a * b
+#
+#
+# # Example usage:
+# multiply(3, 4)
 
 
-if __name__ == "__main__":
-    size = 40
-    top = 200
-    left = 100
-    bottom = 150
-    right = 50
+# def reverse_dict(d):
+#     reverse_d = {}
+#
+#     for key, value in d.items():
+#         reverse_d[value] = key
+#     return reverse_d
+#
+#
+# print(reverse_dict({'a': 1, 'b': 2}))
 
-    eq = PlateEquation(size, top, left, bottom, right)
-    eq.build()
+# def can_vote(age, citizen):
+#     return age >= 18 and citizen
+#
+#
+# print(can_vote(20, True))
+# print(can_vote(16, True))
+# print(can_vote(30, False))
 
-    sol = gauss_solve(eq.get_matrix(), eq.get_vector())
-    temp_map = sol.reshape(size, size)
-
-    for i in range(size - 1, -1, -1):
-        for j in range(size - 1, -1, -1):
-            print(f"{sol[size * i + j]:.2f}", end=" ")
-        print()
-
-    plt.imshow(temp_map, cmap='inferno', origin='lower')
-    plt.colorbar(label='Temperature')
-    plt.title('Plate Temperature Distribution')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.show()
